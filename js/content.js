@@ -208,9 +208,20 @@ function isDomainCanvasPage() {
                 })
             })
         } else {
-            setupCustomURL();
+            // only probe pages that look like Canvas, instead of sending a request to every site
+            const probe = () => { if (looksLikeCanvas()) setupCustomURL(); };
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", probe);
+            } else {
+                probe();
+            }
         }
     });
+}
+
+function looksLikeCanvas() {
+    return window.location.hostname.endsWith(".instructure.com") ||
+        document.querySelector('.ic-app, link[href*="brandable_css"]') !== null;
 }
 
 function startExtension() {

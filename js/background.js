@@ -6,7 +6,6 @@ chrome.runtime.onInstalled.addListener(function () {
             "previous_theme": null,
             "errors": [],
             "saved_themes": {},
-            "liked_themes": [],
         },
         "sync": {
             "dark_preset": {
@@ -85,19 +84,20 @@ chrome.runtime.onInstalled.addListener(function () {
             "reminders": [],
             "reminder_count": 1,
             "multi_remind": false,
-            "id": "",
-            "new_browser": null,
             "gpa_calc_cumulative": false,
             "gpa_calc_weighted": true,
-            "browser_show_likes": false,
             "custom_styles": "",
         }
     };
 
-    const updateMsg = "Better Canvas was just updated!\nThis version added new themes, cumulative GPA into the GPA calculator, and a new sorting function for themes.";
+    const updateMsg = "Better Canvas Debloated was just updated!";
 
     chrome.storage.local.get(null, local => {
         chrome.storage.sync.get(null, async sync => {
+            // clear data left over from the removed community themes browser
+            chrome.storage.sync.remove(["id", "new_browser", "browser_show_likes"]);
+            chrome.storage.local.remove(["liked_themes"]);
+
             let newSyncOptions = {"update_msg": updateMsg};
             let newLocalOptions = {};
             Object.keys(default_options["sync"]).forEach(option => {
@@ -126,4 +126,3 @@ chrome.runtime.onInstalled.addListener(function () {
     });
 });
 
-chrome.runtime.setUninstallURL("https://diditupe.dev/bettercanvas/goodbye");
