@@ -237,6 +237,20 @@ function startExtension() {
     console.log("Better Canvas - running");
 }
 
+// hide Canvas's "Switch to new dashboard view" opt-in button
+function hideNewDashboardToggle() {
+    const pattern = /switch to (the )?new dashboard/i;
+    const hide = () => {
+        document.querySelectorAll('button, a, [role="button"]').forEach(el => {
+            if (el.style.display !== 'none' && pattern.test(el.textContent + ' ' + (el.getAttribute('aria-label') || ''))) {
+                el.style.display = 'none';
+            }
+        });
+    };
+    hide();
+    new MutationObserver(hide).observe(document.documentElement, { childList: true, subtree: true });
+}
+
 function applyOptionsChanges(changes) {
     let rewrite = {};
     Object.keys(changes).forEach(key => {
