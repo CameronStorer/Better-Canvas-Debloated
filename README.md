@@ -1,4 +1,4 @@
-![Better Canvas](/icon/icon-wide.png)
+![Better Canvas Debloated](/icon/icon-wide.png)
 
 # Better Canvas Debloated
 
