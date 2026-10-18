@@ -90,7 +90,7 @@ chrome.runtime.onInstalled.addListener(function () {
         }
     };
 
-    const updateMsg = "Better Canvas Debloated was just updated!";
+    const updateMsg = "Debloated Dashboard for Canvas was just updated!";
 
     chrome.storage.local.get(null, local => {
         chrome.storage.sync.get(null, async sync => {

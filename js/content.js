@@ -245,7 +245,7 @@ function startExtension() {
 
     chrome.storage.onChanged.addListener(applyOptionsChanges);
 
-    console.log("Better Canvas - running");
+    console.log("Debloated Dashboard - running");
 }
 
 // hide Canvas's "Switch to new dashboard view" opt-in button
@@ -2067,15 +2067,15 @@ function setupCustomURL() {
         if (res.length) {
             getCards(res).then(() => {
                 setTimeout(() => {
-                    console.log("Better Canvas - setting custom domain to " + domain);
+                    console.log("Debloated Dashboard - setting custom domain to " + domain);
                     chrome.storage.sync.set({ custom_domain: [domain] }).then(location.reload());
                 }, 100);
             });
         } else {
-            console.log("Better Canvas - this url doesn't seem to be a canvas url (1)");
+            console.log("Debloated Dashboard - this url doesn't seem to be a canvas url (1)");
         }
     }).catch(err => {
-        console.log("Better Canvas - this url doesn't seem to be a canvas url (2)");
+        console.log("Debloated Dashboard - this url doesn't seem to be a canvas url (2)");
     });
 }
 

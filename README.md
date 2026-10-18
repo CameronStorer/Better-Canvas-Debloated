@@ -1,33 +1,34 @@
-![Better Canvas Debloated](/icon/icon-wide.png)
+![Debloated Dashboard for Canvas](/icon/icon-wide.png)
 
-# Better Canvas Debloated
+# Debloated Dashboard for Canvas
 
-A debloated, privacy-friendly fork of [Better Canvas](https://github.com/UseBetterCanvas/bettercanvas) (originally by [ksucpea](https://github.com/ksucpea)), based on **version 5.12.6**, the last release under the MIT License.
+A lightweight, private set of tweaks for Canvas: dark mode, a better to-do list, a GPA calculator and more. No tracking, no accounts, no bloat.
 
-## Purpose
+## Features
 
-Newer Better Canvas releases added a lot of bloat. This fork keeps the features people actually use and removes the rest, along with everything that talks to a third-party server.
+- Fully customizable dark mode, with presets, a color editor and automatic scheduling
+- A better to-do list on the dashboard
+- Assignments due shown on each course card
+- Grades shown on dashboard cards
+- GPA calculator (college and high school, weighted and cumulative)
+- Dashboard notes
+- Custom dashboard card images, colors and gradients
+- Custom fonts
+- Condensed cards and full-width layout
+- Optional browser-wide assignment reminders
+- Save, export and import your own themes
+- Hides Canvas's "Switch to new dashboard view" prompt
 
-**Kept:** dark mode (with presets, scheduling and a full editor), the better to-do list, the GPA calculator, dashboard grades, dashboard notes, card customization and colors, custom fonts, assignment reminders, and saving, exporting and importing your own themes.
+## Privacy
 
-**Removed / changed:**
-
-- **Community themes are gone**: the online theme browser, likes, theme submissions and all the built-in user-made themes. Those themes hotlinked images from Tumblr, Pinterest, Blogspot and other sites.
-- **No anonymous server ID.** The extension no longer registers an ID with the Better Canvas theme server, and it deletes any old ID left over from the original extension.
-- **No uninstall tracking.** Uninstalling no longer opens a page on the developer's website.
-- **No probing every website.** The original extension sent a request to `/api/v1/courses` on *every* site you visited until it found your Canvas domain. This fork only checks pages that actually look like Canvas.
-- **No Google Fonts in the menu.** The menu font is bundled locally. Google Fonts is only contacted if you choose a custom Canvas font yourself.
-- **Hides Canvas's "Switch to new dashboard view" button**, so you stay on the classic dashboard.
-- **Works in Firefox and Chrome** from the same folder.
-
-After these changes, the only network requests the extension makes go to your own school's Canvas site. The one exception is the Google Fonts request if you pick a custom font.
+The extension only talks to **your own school's Canvas site**. There are no analytics, tracking, ads, remote code or accounts, and your Canvas data never leaves your browser. The only exception is Google Fonts, which is contacted only if you choose a custom Canvas font. See the full [privacy policy](PRIVACY.md).
 
 ## Installation
 
 Download the code with **Code → Download ZIP** above and unzip it, or clone it:
 
 ```bash
-git clone https://github.com/CameronStorer/Better-Canvas-Debloated.git
+git clone https://github.com/CameronStorer/Debloated-Dashboard-for-Canvas.git
 ```
 
 ### Chrome / Edge / Brave / Opera
@@ -45,7 +46,7 @@ git clone https://github.com/CameronStorer/Better-Canvas-Debloated.git
 
 **Permanent:** standard Firefox only keeps extensions that Mozilla has signed. Choose one of these:
 
-- **Self-sign (free, works in normal Firefox):** create a free account at the [Firefox Add-on Developer Hub](https://addons.mozilla.org/developers/) and submit the zipped folder as **"On your own"** (unlisted). It isn't published publicly. Install the signed `.xpi` you get back by dragging it into Firefox.
+- **Self-sign (free, works in normal Firefox):** create a free account at the [Firefox Add-on Developer Hub](https://addons.mozilla.org/developers/) and submit the zipped folder as **"On your own"** (unlisted). Install the signed `.xpi` you get back by dragging it into Firefox.
 - **Firefox Developer Edition, Nightly or ESR:** set `xpinstall.signatures.required` to `false` in `about:config`. Zip the *contents* of the folder, so `manifest.json` is at the top level of the zip. Then go to `about:addons` → ⚙ → **Install Add-on From File…** and pick the zip.
 
 ## Usage
@@ -57,10 +58,12 @@ git clone https://github.com/CameronStorer/Better-Canvas-Debloated.git
 
 ## Issues
 
-Found a bug? [Open an issue](https://github.com/CameronStorer/Better-Canvas-Debloated/issues). Please don't contact the original Better Canvas developers about this fork.
+Found a bug? [Open an issue](https://github.com/CameronStorer/Debloated-Dashboard-for-Canvas/issues).
 
 ## Credits & License
 
-Better Canvas was created by [ksucpea](https://github.com/ksucpea), with contributions from [fudgeu](https://github.com/fudgeu), [Tibo Geeraerts](https://github.com/tibogeeraerts), [Jacob Mungle](https://github.com/Jelgnum), [FireIsGood](https://github.com/FireIsGood) and others. This fork isn't affiliated with or endorsed by them, or by Instructure (the makers of Canvas).
+Debloated Dashboard for Canvas is based on [Better Canvas](https://github.com/UseBetterCanvas/bettercanvas) 5.12.6 by [ksucpea](https://github.com/ksucpea), with contributions from [fudgeu](https://github.com/fudgeu), [Tibo Geeraerts](https://github.com/tibogeeraerts), [Jacob Mungle](https://github.com/Jelgnum), [FireIsGood](https://github.com/FireIsGood) and others. Version 5.12.6 was released under the [MIT License](LICENSE). Later upstream releases use a different license, and none of that code is included here.
 
-This fork is based on Better Canvas 5.12.6, which was released under the [MIT License](LICENSE). Upstream changed its license for later releases; none of that later code is included here. The bundled Wix Madefor Text font is under the [SIL Open Font License](fonts/OFL.txt).
+Compared to Better Canvas 5.12.6, this project removes the community themes (online browser, likes, submissions, server ID and the built-in themes that hotlinked third-party images). It also removes uninstall tracking and the Canvas-domain probing of every site you visited, and it bundles the menu font locally instead of loading it from Google Fonts.
+
+This project is not affiliated with, or endorsed by, the Better Canvas developers or Instructure. Canvas is a trademark of Instructure, Inc. The bundled Wix Madefor Text font is under the [SIL Open Font License](fonts/OFL.txt).

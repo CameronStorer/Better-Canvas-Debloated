@@ -794,7 +794,7 @@ function displayAdvancedCards() {
                 };
             });
         } else {
-            document.querySelector(".advanced-cards").innerHTML = `<div class="option-container"><h3>Couldn't find your cards!<br/>You may need to refresh your Canvas page and/or this menu page.<br/><br/>If you're still having issues, open an issue at github.com/CameronStorer/Better-Canvas-Debloated</h3></div>`;
+            document.querySelector(".advanced-cards").innerHTML = `<div class="option-container"><h3>Couldn't find your cards!<br/>You may need to refresh your Canvas page and/or this menu page.<br/><br/>If you're still having issues, open an issue at github.com/CameronStorer/Debloated-Dashboard-for-Canvas</h3></div>`;
         }
     });
 }
