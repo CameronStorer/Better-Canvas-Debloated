@@ -51,7 +51,7 @@ _Based on Better Canvas 5.12.6 (MIT License) by ksucpea and contributors. Not af
   - **`storage` justification:** "Saves the user's settings and customizations."
   - **Host permission justification:** "Canvas is hosted on a different domain for each school, so the extension must be able to run on the user's Canvas site. Optional reminders can also be shown on other sites if the user enables them."
   - **Remote code:** No.
-  - **Data usage:** tick **"Personally identifiable information"** and **"Website content"** only if the form asks about data the extension *handles*. Then certify that it is **not** sold, **not** used for unrelated purposes and **not** transferred to anyone. Grades and assignments are read from Canvas but stay on the device.
+  - **Data usage:** tick only **"Website content"** (assignments, announcements and grades are read from Canvas but stay on the device). Leave every other category unticked, and check all three certifications.
 
 ## Images
 
