@@ -777,8 +777,8 @@ function createTodoSections(location) {
     */
     let loader = '<div class="bettercanvas-todo-item-loader"><div style="width: 100px" class="bettercanvas-skeleton-text"></div><div style="width: 200px" class="bettercanvas-skeleton-text"></div><div class="bettercanvas-skeleton-text"></div></div>';
     for (let i = 0; i < options.num_todo_items; i++) {
-        todoAssignments.innerHTML += loader;
-        todoAnnouncements.innerHTML += loader;
+        appendHTML(todoAssignments, loader);
+        appendHTML(todoAnnouncements, loader);
     }
 }
 
@@ -874,10 +874,10 @@ function loadBetterTodo() {
 
                     let listItemContainer = document.createElement("div");
                     listItemContainer.classList.add("bettercanvas-todo-container");
-                    listItemContainer.innerHTML = '<div class="bettercanvas-hover-preview"><p class="bettercanvas-preview-title"></p><p class="bettercanvas-preview-text"></p></div><div class="bettercanvas-todo-actions"></div><div class="bettercanvas-todo-icon"></div><a class="bettercanvas-todo-item"><div class="bettercanvas-todo-item-header"></div></a><button class="bettercanvas-todo-actions-btn"><i class="icon-more bettercanvas-dots-icon" aria-hidden="true"></i></button>';
+                    appendHTML(listItemContainer, '<div class="bettercanvas-hover-preview"><p class="bettercanvas-preview-title"></p><p class="bettercanvas-preview-text"></p></div><div class="bettercanvas-todo-actions"></div><div class="bettercanvas-todo-icon"></div><a class="bettercanvas-todo-item"><div class="bettercanvas-todo-item-header"></div></a><button class="bettercanvas-todo-actions-btn"><i class="icon-more bettercanvas-dots-icon" aria-hidden="true"></i></button>');
                     listItemContainer.querySelector(".bettercanvas-todo-item").href = item.html_url;
                     listItemContainer.dataset.id = item.plannable_id;
-                    listItemContainer.querySelector('.bettercanvas-todo-icon').innerHTML += svg;
+                    appendHTML(listItemContainer.querySelector('.bettercanvas-todo-icon'), svg);
 
                     let listItem = listItemContainer.querySelector(".bettercanvas-todo-item");
                     if (itemState?.["lbl"] && itemState["lbl"] !== "") {
@@ -965,16 +965,16 @@ function loadBetterTodo() {
                     });
 
                     let removeBtn = makeElement("div", actions, { "className": "bettercanvas-todo-action", "textContent": "Remove" });
-                    removeBtn.innerHTML += x_svg;
+                    appendHTML(removeBtn, x_svg);
                     const dueAt = new Date(item.plannable_date).getTime();
 
                     let crossOffBtn = makeElement("div", actions, { "className": "bettercanvas-todo-action", "textContent": "Cross off" });
-                    crossOffBtn.innerHTML += check_svg;
+                    appendHTML(crossOffBtn, check_svg);
                     crossOffBtn.addEventListener("click", () => {
                         setAssignmentState(item.plannable_id, { "crs": listItemContainer.querySelector(".bettercanvas-todo-item").style.textDecoration === "line-through" ? false : true, "expire": dueAt });
                     });
                     let label = makeElement("span", actions, { "className": "bettercanvas-todo-action-tag", "textContent": "Label:" });
-                    label.innerHTML += tag_svg;
+                    appendHTML(label, tag_svg);
                     let labelInput = makeElement("input", actions, { "className": "bettercanvas-todo-input", "type": "text", "placeholder": "Label", "value": itemState && itemState["lbl"] ? itemState["lbl"] : "" });
                     labelInput.addEventListener("change", (e) => {
                         setAssignmentState(item.plannable_id, { "lbl": e.target.value, "expire": dueAt });
@@ -1832,7 +1832,8 @@ function setupGPACalc() {
             container2.className = "bettercanvas-gpa-card";
             container2.style.display = options.gpa_calc === true ? "inline-block" : "none";
 
-            container2.innerHTML = `<h3 class="bettercanvas-gpa-header">GPA</h3><div><div><p id="bettercanvas-gpa-unweighted"></p><p>Current</p></div><div style="display:${options["gpa_calc_weighted"] ? "block" : "none"}"><p id="bettercanvas-gpa-weighted"></p><p>Weighted</p></div><div style="display:${options["gpa_calc_cumulative"] ? "block" : "none"}"><p id="bettercanvas-gpa-cumulative"></p><p>Cumulative</p></div></div>`;
+            container2.replaceChildren();
+            appendHTML(container2, `<h3 class="bettercanvas-gpa-header">GPA</h3><div><div><p id="bettercanvas-gpa-unweighted"></p><p>Current</p></div><div style="display:${options["gpa_calc_weighted"] ? "block" : "none"}"><p id="bettercanvas-gpa-weighted"></p><p>Weighted</p></div><div style="display:${options["gpa_calc_cumulative"] ? "block" : "none"}"><p id="bettercanvas-gpa-cumulative"></p><p>Cumulative</p></div></div>`);
             let editBtn = makeElement("button", container2, { "className": "bettercanvas-gpa-edit-btn", "textContent": "Edit Calculator" });
 
             let container = document.querySelector(".bettercanvas-gpa") || document.createElement("div");
@@ -2124,6 +2125,12 @@ function getApiData() {
     }
 }
 
+
+// parse built-in markup and append it, avoiding innerHTML
+function appendHTML(el, html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    el.append(...doc.body.childNodes);
+}
 
 function makeElement(element, location, options) {
     let creation = document.createElement(element);
