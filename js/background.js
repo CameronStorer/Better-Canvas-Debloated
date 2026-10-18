@@ -126,3 +126,98 @@ chrome.runtime.onInstalled.addListener(function () {
     });
 });
 
+/*
+Site access
+The content script is declared for *.instructure.com only. Schools on a custom
+Canvas domain grant access to that one site, and all-sites access is only
+requested when browser-wide reminders are turned on.
+*/
+
+const SITES_SCRIPT_ID = "canvas-sites";
+const ALL_SITES = "https://*/*";
+
+function toOriginPattern(domain) {
+    const host = domain.trim().replace(/^https?:\/\//, "").split("/")[0];
+    if (!host || host.endsWith(".instructure.com")) return null;
+    return `https://${host}/*`;
+}
+
+// custom domain patterns the user has granted access to
+async function grantedDomainPatterns(domains) {
+    const patterns = [];
+    for (const domain of domains || []) {
+        const pattern = toOriginPattern(domain);
+        if (pattern && !patterns.includes(pattern) && await chrome.permissions.contains({ origins: [pattern] })) {
+            patterns.push(pattern);
+        }
+    }
+    return patterns;
+}
+
+async function applySiteScripts() {
+    const sync = await chrome.storage.sync.get(["custom_domain", "remind"]);
+    const allSites = await chrome.permissions.contains({ origins: [ALL_SITES] });
+    const matches = sync.remind === true && allSites ? [ALL_SITES] : await grantedDomainPatterns(sync.custom_domain);
+
+    try {
+        await chrome.scripting.unregisterContentScripts({ ids: [SITES_SCRIPT_ID] });
+    } catch (e) {
+        // nothing registered yet
+    }
+    if (matches.length === 0) return;
+    await chrome.scripting.registerContentScripts([{
+        id: SITES_SCRIPT_ID,
+        matches: matches,
+        excludeMatches: ["https://*.instructure.com/*"],
+        js: ["js/content.js"],
+        css: ["css/content.css"],
+        runAt: "document_start"
+    }]);
+}
+
+// run one sync at a time so registrations don't collide
+let siteSyncQueue = Promise.resolve();
+function syncSiteScripts() {
+    siteSyncQueue = siteSyncQueue.then(applySiteScripts).catch(e => console.log(e));
+    return siteSyncQueue;
+}
+
+async function reloadTabs(patterns) {
+    if (patterns.length === 0) return;
+    const tabs = await chrome.tabs.query({ url: patterns });
+    tabs.forEach(tab => chrome.tabs.reload(tab.id));
+}
+
+// newly granted Canvas sites are remembered, which reloads them below
+chrome.permissions.onAdded.addListener(async (permissions) => {
+    const origins = (permissions.origins || []).filter(origin => origin !== ALL_SITES);
+    const sync = await chrome.storage.sync.get("custom_domain");
+    const domains = (sync.custom_domain || []).filter(domain => domain !== "");
+    const known = [];
+    for (const origin of origins) {
+        if (domains.some(domain => toOriginPattern(domain) === origin)) {
+            known.push(origin);
+        } else {
+            domains.push(new URL(origin.replace("/*", "/")).hostname);
+        }
+    }
+    if (known.length < origins.length) await chrome.storage.sync.set({ custom_domain: domains });
+    await syncSiteScripts();
+    await reloadTabs(known);
+});
+
+chrome.permissions.onRemoved.addListener(syncSiteScripts);
+
+chrome.storage.onChanged.addListener(async (changes, area) => {
+    if (area !== "sync" || !(changes.custom_domain || changes.remind)) return;
+    await syncSiteScripts();
+    if (changes.custom_domain) {
+        // reload pages on domains that were just added so the extension starts there
+        const before = await grantedDomainPatterns(changes.custom_domain.oldValue);
+        const after = await grantedDomainPatterns(changes.custom_domain.newValue);
+        await reloadTabs(after.filter(pattern => !before.includes(pattern)));
+    }
+});
+
+chrome.runtime.onStartup.addListener(syncSiteScripts);
+chrome.runtime.onInstalled.addListener(syncSiteScripts);

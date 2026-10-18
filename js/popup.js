@@ -222,6 +222,17 @@ function setup() {
                 if (option === "auto_dark") {
                     toggleDarkModeDisable(status);
                 }
+                if (option === "remind" && status === true) {
+                    // reminders show on every site, so ask for that access only now
+                    chrome.permissions.request({ origins: ["https://*/*"] }).then(granted => {
+                        if (granted) return;
+                        optionSwitch.querySelector("#on").checked = false;
+                        optionSwitch.querySelector("#on").classList.remove("checked");
+                        optionSwitch.querySelector("#off").classList.add("checked");
+                        chrome.storage.sync.set({ remind: false });
+                        displayAlert(true, "Reminders need access to all sites to show on other pages.");
+                    });
+                }
             });
         });
     });
@@ -341,6 +352,18 @@ function setup() {
         });
         chrome.storage.sync.set({ custom_domain: domains });
     });
+
+    // ask for access to custom domains once the user finishes typing
+    document.querySelector('#customDomain').addEventListener('change', function () {
+        const origins = [];
+        this.value.split(",").forEach(domain => {
+            const host = domain.trim().replace(/^https?:\/\//, "").split("/")[0];
+            if (host && !host.endsWith(".instructure.com")) origins.push(`https://${host}/*`);
+        });
+        if (origins.length > 0) chrome.permissions.request({ origins: origins }).catch(() => {});
+    });
+
+    checkEnableSite();
 
     // setup custom url
     chrome.storage.sync.get(["custom_domain"], storage => {
@@ -474,6 +497,46 @@ function setup() {
     document.getElementById("save-theme").addEventListener("click", saveCurrentTheme);
 
 
+}
+
+// offer to enable the extension when the current tab is Canvas on a custom domain
+async function checkEnableSite() {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab || !tab.url || !tab.url.startsWith("https://")) return;
+    const host = new URL(tab.url).hostname;
+    const origin = `https://${host}/*`;
+    if (host.endsWith(".instructure.com")) return;
+    const sync = await chrome.storage.sync.get("custom_domain");
+    const known = (sync.custom_domain || []).some(domain => domain.replace(/^https?:\/\//, "").split("/")[0] === host);
+    const alreadyGranted = await chrome.permissions.contains({ origins: [origin] });
+    if (known && alreadyGranted) return;
+
+    let isCanvas = false;
+    try {
+        const [res] = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: () => document.querySelector('.ic-app, link[href*="brandable_css"]') !== null
+        });
+        isCanvas = res?.result === true;
+    } catch (e) {
+        // page can't be scripted (e.g. browser pages)
+    }
+    if (!isCanvas) return;
+
+    const banner = document.getElementById("enable-site");
+    document.getElementById("enable-site-host").textContent = host;
+    banner.style.display = "flex";
+    document.getElementById("enable-site-btn").addEventListener("click", () => {
+        chrome.permissions.request({ origins: [origin] }).then(granted => {
+            if (!granted) return;
+            banner.style.display = "none";
+            // a new grant is saved by the background script; an existing one needs the domain saved here
+            if (alreadyGranted && !known) {
+                const domains = (sync.custom_domain || []).filter(domain => domain !== "");
+                chrome.storage.sync.set({ custom_domain: [...domains, host] });
+            }
+        });
+    });
 }
 
 function setupCustomStyle(initial) {

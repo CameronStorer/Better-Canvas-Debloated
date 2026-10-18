@@ -51,10 +51,12 @@ git clone https://github.com/CameronStorer/Debloated-Dashboard-for-Canvas.git
 
 ## Usage
 
-1. Open your school's Canvas site while logged in. The extension detects the domain and reloads the page once. If it doesn't, enter your Canvas URL in the extension menu.
+1. Open your school's Canvas site while logged in.
+   - **`*.instructure.com` addresses** work right away. The extension detects your Canvas and reloads the page once.
+   - **Custom school domains** (like `canvas.myschool.edu`): click the extension icon while on Canvas, then click **Enable**. This grants access to that one site only.
 2. Click the extension icon in the toolbar to change its options.
 
-**Reminders:** the optional browser-wide assignment reminders (off by default) show pop-ups on other websites. That's why the extension asks for access to all sites. With reminders off, it does nothing on sites that aren't Canvas.
+**Permissions:** the extension only has access to `*.instructure.com` by default, plus any Canvas site you enable. The optional browser-wide assignment reminders (off by default) show pop-ups on other websites, so turning them on asks for access to all sites. Without that, the extension never runs anywhere except Canvas.
 
 ## Issues
 

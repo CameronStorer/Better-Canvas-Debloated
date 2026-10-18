@@ -49,7 +49,9 @@ _Based on Better Canvas 5.12.6 (MIT License) by ksucpea and contributors. Not af
 - Chrome "Privacy practices" tab:
   - **Single purpose:** "Customizes the Canvas LMS interface and adds study tools such as a to-do list, dark mode and a GPA calculator."
   - **`storage` justification:** "Saves the user's settings and customizations."
-  - **Host permission justification:** "Canvas is hosted on a different domain for each school, so the extension must be able to run on the user's Canvas site. Optional reminders can also be shown on other sites if the user enables them."
+  - **Host permission justification:** "The extension only runs on *.instructure.com by default. Some schools host Canvas on their own domain, so the user can grant access to that single site from the popup (optional host permission). Broad access (https://*/*) is optional and requested only if the user turns on browser-wide assignment reminders. It is never granted at install."
+  - **activeTab justification:** "When the user opens the popup, activeTab is used to check whether the current tab is a Canvas site on a custom domain, so the extension can offer to enable itself there."
+  - **scripting justification:** "Used to run the extension's content script on custom Canvas domains the user has enabled, and to detect whether the active tab is Canvas."
   - **Remote code:** No.
   - **Data usage:** tick only **"Website content"** (assignments, announcements and grades are read from Canvas but stay on the device). Leave every other category unticked, and check all three certifications.
 

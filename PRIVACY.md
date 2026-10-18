@@ -1,6 +1,6 @@
 # Privacy Policy: Debloated Dashboard for Canvas
 
-_Last updated: October 17, 2026_
+_Last updated: October 18, 2026_
 
 Debloated Dashboard for Canvas ("the extension") does not collect, sell, share or send your personal data to the developer or any third party.
 
@@ -27,7 +27,9 @@ There are no analytics, tracking, ads, remote code or user accounts.
 ## Permissions
 
 - `storage`: saves your settings.
-- Access to websites: the extension needs to run on your Canvas site, which can be on any domain depending on your school. If you turn on the optional browser-wide assignment reminders (off by default), it also shows reminder pop-ups on other sites. With reminders off, it does nothing on sites that aren't Canvas, and it never reads or sends their content.
+- Access to websites: by default, the extension can only run on `*.instructure.com` Canvas sites. If your school uses a custom Canvas domain, you grant access to that one site by clicking **Enable** in the extension menu.
+- `activeTab` and `scripting`: when you open the extension menu, these let it check whether the current tab is a Canvas site so it can offer the **Enable** button. They also let it run on the sites you've enabled.
+- Optional access to all sites: requested only if you turn on browser-wide assignment reminders (off by default), so reminders can appear on other pages. The extension never reads or sends the content of those pages.
 
 ## Contact
 
