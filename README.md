@@ -58,6 +58,14 @@ git clone https://github.com/CameronStorer/Debloated-Dashboard-for-Canvas.git
 
 **Permissions:** the extension only has access to `*.instructure.com` by default, plus any Canvas site you enable. The optional browser-wide assignment reminders (off by default) show pop-ups on other websites, so turning them on asks for access to all sites. Without that, the extension never runs anywhere except Canvas.
 
+## Building store packages
+
+```bash
+node build.mjs
+```
+
+This creates two zips in `dist/`: `*-chromium.zip` for the Chrome Web Store and Edge Add-ons, and `*-firefox.zip` for Firefox Add-ons. The folder itself still loads unpacked in either browser.
+
 ## Issues
 
 Found a bug? [Open an issue](https://github.com/CameronStorer/Debloated-Dashboard-for-Canvas/issues).
